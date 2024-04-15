@@ -6,7 +6,7 @@ from flytekit.types.file import FlyteFile
 @workflow
 def workflow() -> FlyteFile:
     """
-    To run this workflow: pyflyte run --remote output_workflow.py workflow
+    pyflyte run --remote output_workflow.py workflow
     """
 
     results = DominoTask(

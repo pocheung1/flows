@@ -5,7 +5,7 @@ from flytekit import workflow
 @workflow
 def workflow() -> None:
     """
-    To run this workflow: pyflyte run --remote sleep_workflow.py workflow
+    pyflyte run --remote sleep_workflow.py workflow
     """
 
     DominoTask(
