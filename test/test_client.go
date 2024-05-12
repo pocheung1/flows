@@ -218,4 +218,3 @@ func createExecution(adminServiceClient service.AdminServiceClient, projectID st
 	}
 	log.Println("Execution created successfully")
 }
-
