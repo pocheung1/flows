@@ -16,8 +16,3 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240509183442-62759503f434 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect
 )
-
-//replace (
-//	github.com/flyteorg/flyte/flytestdlib => github.com/flyteorg/flyte/flytestdlib v1.12.0
-//	sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.18.0
-//)
