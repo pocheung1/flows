@@ -1,5 +1,5 @@
-from utils.flyte import DominoTask
 from flytekit import workflow
+from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
 
 
 @workflow
@@ -8,11 +8,11 @@ def workflow() -> None:
     pyflyte run --remote sleep_workflow.py workflow
     """
 
-    DominoTask(
-        name="Sleep workflow",
-        command="python /mnt/code/sleep.py",
-        environment="V2 Flyte Env",
-        hardware_tier="Small",
-        inputs=[],
-        outputs=[],
-    )
+    DominoJobTask(
+        name="Sleep",
+        domino_job_config=DominoJobConfig(
+            Command="python sleep.py",
+            MainRepoGitRef=GitRef("head"),
+        ),
+        use_latest=True,
+    )()

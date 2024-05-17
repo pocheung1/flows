@@ -1,6 +1,6 @@
-from utils.flyte import DominoTask, Input, Output
 from flytekit import workflow
 from flytekit.types.file import FlyteFile
+from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
 
 
 @workflow
@@ -19,32 +19,38 @@ def workflow(data_path: str) -> FlyteFile:
     :return: The training results as a model
     """
 
-    data_prep_results = DominoTask(
+    prepare_data = DominoJobTask(
         name="Prepare data",
-        command="python /mnt/code/train_data_prep.py",
-        environment="V2 Flyte Env",
-        hardware_tier="Small",
-        inputs=[
-            Input(name="data_path", type=str, value=data_path)
-        ],
-        outputs=[
-            Output(name="processed_data", type=FlyteFile)
-        ]
+        domino_job_config=DominoJobConfig(
+            Command="python train_data_prep.py",
+            MainRepoGitRef=GitRef("head"),
+        ),
+        inputs={'data_path': str},
+        outputs={'processed_data': FlyteFile},
+        use_latest=True,
     )
+    prepare_data_results = prepare_data(data_path=data_path)
 
-    training_results = DominoTask(
+    train_model = DominoJobTask(
         name="Train model",
-        command="python /mnt/code/train_model.py",
-        environment="V2 Flyte Env",
-        hardware_tier="Small",
-        inputs=[
-            Input(name="processed_data", type=FlyteFile, value=data_prep_results['processed_data']),
-            Input(name="epochs", type=int, value=10),
-            Input(name="batch_size", type=int, value=32)
-        ],
-        outputs=[
-            Output(name="model", type=FlyteFile)
-        ]
+        domino_job_config=DominoJobConfig(
+            Command="python train_model.py",
+            MainRepoGitRef=GitRef("head"),
+        ),
+        inputs={
+            'data': FlyteFile,
+            'epochs': int,
+            'batch_size': int,
+        },
+        outputs={
+            'model': FlyteFile,
+        },
+        use_latest=True,
+    )
+    train_model_results = train_model(
+        data=prepare_data_results['processed_data'],
+        epochs=10,
+        batch_size=32,
     )
 
-    return training_results['model']
+    return train_model_results['model']
