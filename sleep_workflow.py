@@ -1,5 +1,5 @@
 from flytekit import workflow
-from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
+from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask
 
 
 @workflow
@@ -12,7 +12,6 @@ def workflow() -> None:
         name="Sleep",
         domino_job_config=DominoJobConfig(
             Command="python sleep.py",
-            MainRepoGitRef=GitRef("head"),
         ),
         use_latest=True,
     )()
