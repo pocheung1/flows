@@ -36,7 +36,7 @@ def workflow(data_path: str) -> FlyteFile:
             Command="python train_model.py",
         ),
         inputs={
-            'data': FlyteFile,
+            'processed_data': FlyteFile,
             'epochs': int,
             'batch_size': int,
         },
@@ -46,7 +46,7 @@ def workflow(data_path: str) -> FlyteFile:
         use_latest=True,
     )
     train_model_results = train_model(
-        data=prepare_data_results['processed_data'],
+        processed_data=prepare_data_results['processed_data'],
         epochs=10,
         batch_size=32,
     )
