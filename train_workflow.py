@@ -1,6 +1,6 @@
 from flytekit import workflow
 from flytekit.types.file import FlyteFile
-from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask, GitRef
+from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask
 
 
 @workflow
@@ -23,7 +23,6 @@ def workflow(data_path: str) -> FlyteFile:
         name="Prepare data",
         domino_job_config=DominoJobConfig(
             Command="python train_data_prep.py",
-            MainRepoGitRef=GitRef("head"),
         ),
         inputs={'data_path': str},
         outputs={'processed_data': FlyteFile},
@@ -35,7 +34,6 @@ def workflow(data_path: str) -> FlyteFile:
         name="Train model",
         domino_job_config=DominoJobConfig(
             Command="python train_model.py",
-            MainRepoGitRef=GitRef("head"),
         ),
         inputs={
             'data': FlyteFile,
