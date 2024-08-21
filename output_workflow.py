@@ -1,6 +1,6 @@
-from utils.flyte import DominoTask, Output
 from flytekit import workflow
 from flytekit.types.file import FlyteFile
+from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask
 
 
 @workflow
@@ -9,15 +9,14 @@ def workflow() -> FlyteFile:
     pyflyte run --remote output_workflow.py workflow
     """
 
-    results = DominoTask(
-        name="Output workflow",
-        command="python /mnt/code/output.py",
-        environment="V2 Flyte Env",
-        hardware_tier="Small",
-        inputs=[],
-        outputs=[
-            Output(name="model", type=FlyteFile)
-        ]
-    )
+    results = DominoJobTask(
+        name="Output workflow test",
+        domino_job_config=DominoJobConfig(
+            Command="python output.py",
+        ),
+        inputs={},
+        outputs={'model': FlyteFile},
+        use_latest=True,
+    )()
 
     return results['model']
