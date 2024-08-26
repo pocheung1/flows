@@ -1,7 +1,7 @@
 from flytekit import workflow
 from flytekit.types.file import FlyteFile
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask
-
+from typing import TypeVar
 
 @workflow
 def workflow() -> FlyteFile:
@@ -15,7 +15,7 @@ def workflow() -> FlyteFile:
             Command="python output.py",
         ),
         inputs={},
-        outputs={'model': FlyteFile},
+        outputs={'model': FlyteFile[TypeVar("txt")]},
         use_latest=True,
     )()
 
