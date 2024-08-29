@@ -1,6 +1,7 @@
 from flytekit import workflow
 from flytekit.types.file import FlyteFile
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask
+from typing import TypeVar
 
 
 @workflow
@@ -25,7 +26,7 @@ def workflow(data_path: str) -> FlyteFile:
             Command="python train_data_prep.py",
         ),
         inputs={'data_path': str},
-        outputs={'processed_data': FlyteFile},
+        outputs={'processed_data': FlyteFile[TypeVar("csv")]},
         use_latest=True,
     )
     prepare_data_results = prepare_data(data_path=data_path)
@@ -36,12 +37,12 @@ def workflow(data_path: str) -> FlyteFile:
             Command="python train_model.py",
         ),
         inputs={
-            'processed_data': FlyteFile,
+            'processed_data': FlyteFile[TypeVar("csv")],
             'epochs': int,
             'batch_size': int,
         },
         outputs={
-            'model': FlyteFile,
+            'model': FlyteFile[TypeVar("csv")],
         },
         use_latest=True,
     )
