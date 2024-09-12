@@ -1,18 +1,25 @@
 import os
+import pickle
 
-print("Job begins")
+from flytekit.types.directory import FlyteDirectory
 
 # Create the directory
-os.makedirs("/workflow/outputs/model", exist_ok=True)
+files_path = "/workflow/outputs/files"
+os.makedirs(files_path, exist_ok=True)
 
-# Create and write to file1
-print("Writing to /workflow/outputs/model/file1")
-with open("/workflow/outputs/model/file1", "w") as output1:
-    print("This is the content of file1", file=output1)
+# Create file1
+file1_path = f"{files_path}/file1"
+with open(file1_path, "w") as file1:
+    print("This is file1", file=file1)
 
-# Create and write to file2
-print("Writing to /workflow/outputs/model/file2")
-with open("/workflow/outputs/model/file2", "w") as output2:
-    print("This is the content of file2", file=output2)
+# Create file2
+file2_path = f"{files_path}/file2"
+with open(file2_path, "w") as file2:
+    print("This is file2", file=file2)
 
-print("Job ends")
+# Create a FlyteDirectory for the files directory and serialize it as a named output
+named_output = "results"
+output_path = f"/workflow/outputs/{named_output}"
+with open(output_path, "wb") as output:
+    pickle.dump(FlyteDirectory(files_path), output)
+    print(f"Serialized FlyteDirectory to {output_path}")

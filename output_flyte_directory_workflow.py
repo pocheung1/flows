@@ -15,8 +15,8 @@ def workflow() -> FlyteDirectory:
             Command="python output_flyte_directory.py",
         ),
         inputs={},
-        outputs={'model': FlyteDirectory},
+        outputs={'results': FlyteDirectory},
         use_latest=True,
     )()
 
-    return results['model']
+    return results['results']
