@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 from time import sleep
 
@@ -13,8 +12,9 @@ df = pd.read_csv(data_path)
 
 # Pretend like something is happening here to train the model
 print("Training the model")
+print(df)
 sleep(20)
 
 # Write output. Outputs must be written to /workflow/outputs/<NAME OF OUTPUT> for it to be tracked.
 named_output = "model"
-os.mkdir("/workflow/outputs/{}".format(named_output)) 
+df.to_csv("/workflow/outputs/{}".format(named_output))
