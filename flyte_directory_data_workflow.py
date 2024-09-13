@@ -56,7 +56,7 @@ def workflow(data_path: str) -> CSVFile:
         use_latest=True,
     )
     data_process_results = data_process_task(
-        data_dir=data_prep_results['data_dir'],
+        csv_files_dir=data_prep_results['csv_files_dir'],
         epochs=10,
         batch_size=32,
     )
