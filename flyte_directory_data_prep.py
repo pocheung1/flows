@@ -21,7 +21,7 @@ input_path = f"/workflow/inputs/{named_input}"
 with open(input_path, "r") as file:
     csv_data_path = file.read().strip()
 
-print(f"Data directory: {csv_data_path}")
+print(f"Data path: {csv_data_path}")
 df = pd.read_csv(csv_data_path)
 print(df)
 
@@ -38,14 +38,19 @@ named_output = "csv_files_dir"
 output_path = f"/workflow/outputs/{named_output}"
 
 flyte_directory = FlyteDirectory.new_remote().new_dir("csv_files")
-flyte_file_a = flyte_directory.new_file("a.csv")
-df[['a']].to_csv(flyte_file_a, index=False, header=True)
-flyte_file_b = flyte_directory.new_file("b.csv")
-df[['b']].to_csv(flyte_file_b, index=False, header=True)
-flyte_file_c = flyte_directory.new_file("c.csv")
-df[['c']].to_csv(flyte_file_c, index=False, header=True)
 print(f"Flyte directory: {flyte_directory}")
-list_directory(flyte_directory.path)
+print(f"Flyte directory path: {flyte_directory.path}")
+print(f"Flyte directory remote directory: {flyte_directory.remote_directory}")
+print(f"Flyte directory remote source: {flyte_directory.remote_source}")
+
+flyte_file_a = flyte_directory.new_file("a.csv")
+# df[['a']].to_csv(flyte_file_a, index=False, header=True)
+flyte_file_b = flyte_directory.new_file("b.csv")
+# df[['b']].to_csv(flyte_file_b, index=False, header=True)
+flyte_file_c = flyte_directory.new_file("c.csv")
+# df[['c']].to_csv(flyte_file_c, index=False, header=True)
+# list_directory(flyte_directory.path)
+FlyteDirectory.listdir(flyte_directory)
 
 with open(output_path, "wb") as file:
     pickle.dump(flyte_directory, file)
