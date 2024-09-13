@@ -21,8 +21,16 @@ workflow_inputs = "/workflow/inputs"
 list_directory(workflow_inputs)
 
 # Deserialize the named input to a FlyteDirectory
-named_input = "csv_files"
-csv_files_path = f"{workflow_inputs}/{named_input}"
+named_input = "csv_files_path"
+named_input_path = f"{workflow_inputs}/{named_input}"
+with open(named_input_path, "r") as file:
+    csv_files_path = file.read().strip()
+
+print(f"CSV files path: {csv_files_path}")
+
+if not os.path.exists(csv_files_path):
+    raise ValueError(f"CSV files path does not exist: {csv_files_path}")
+
 list_directory(csv_files_path)
 
 # Read CSV files
@@ -36,6 +44,6 @@ df_sum['sum'] = df_a['a'] + df_b['b'] + df_c['c']
 
 # Write a CSV file as the named output
 named_output = "sum"
-output_path = f"/workflow/outputs/{named_output}"
-df_sum.to_csv(output_path, index=False)
-print(f"Wrote CSV file to {output_path}")
+named_output_path = f"/workflow/outputs/{named_output}"
+df_sum.to_csv(named_output_path, index=False)
+print(f"Wrote CSV file to {named_output_path}")
