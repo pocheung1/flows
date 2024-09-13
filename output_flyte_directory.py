@@ -18,8 +18,9 @@ with open(file2_path, "w") as file2:
     print("This is file2", file=file2)
 
 # Create a FlyteDirectory for the files directory and serialize it as a named output
-named_output = "results"
-output_path = f"/workflow/outputs/{named_output}"
-with open(output_path, "wb") as output:
-    pickle.dump(FlyteDirectory(files_path), output)
-    print(f"Serialized FlyteDirectory to {output_path}")
+named_output = "output_path"
+named_output_path = f"/workflow/outputs/{named_output}"
+with open(named_output_path, "w") as output:
+    print(files_path, file=output)
+    # pickle.dump(FlyteDirectory(files_path), output)
+    # print(f"Serialized FlyteDirectory to {named_output_path}")

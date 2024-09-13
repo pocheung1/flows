@@ -9,14 +9,15 @@ def workflow() -> FlyteDirectory:
     pyflyte run --remote output_flyte_directory_workflow.py workflow
     """
 
-    results = DominoJobTask(
+    task = DominoJobTask(
         name="FlyteDirectory Output Task",
         domino_job_config=DominoJobConfig(
             Command="python output_flyte_directory.py",
         ),
         inputs={},
-        outputs={'results': FlyteDirectory},
+        outputs={'output_path': FlyteDirectory},
         use_latest=True,
     )()
 
-    return results['results']
+    print(f"FlyteDirectory: {task['output_path']}")
+    return FlyteDirectory("/workflow/outputs/files")
