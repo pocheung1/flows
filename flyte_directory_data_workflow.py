@@ -35,7 +35,7 @@ def workflow(data_path: str) -> CSVFile:
             Command="python flyte_directory_data_prep.py",
         ),
         inputs={'data_path': str},
-        outputs={'csv_files_dir': FlyteDirectory},
+        outputs={'csv_files': FlyteDirectory},
         use_latest=True,
     )
     data_prep_results = data_prep_task(data_path=data_path)
@@ -46,7 +46,7 @@ def workflow(data_path: str) -> CSVFile:
             Command="python flyte_directory_data_process.py",
         ),
         inputs={
-            'csv_files_dir': FlyteDirectory,
+            'csv_files': FlyteDirectory,
             'epochs': int,
             'batch_size': int,
         },
@@ -56,7 +56,7 @@ def workflow(data_path: str) -> CSVFile:
         use_latest=True,
     )
     data_process_results = data_process_task(
-        csv_files_dir=data_prep_results['csv_files_dir'],
+        csv_files=data_prep_results['csv_files'],
         epochs=10,
         batch_size=32,
     )

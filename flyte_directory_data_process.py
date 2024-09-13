@@ -1,10 +1,13 @@
-import pickle
+import os
 import subprocess
 
 import pandas as pd
 
 
 def list_directory(directory):
+    if not os.path.exists(directory):
+        print(f"Directory does not exist: {directory}")
+        return
     try:
         result = subprocess.run(['ls', '-l', directory], capture_output=True, text=True, check=True)
         print(f"$ ls -l {directory}")
@@ -18,19 +21,14 @@ workflow_inputs = "/workflow/inputs"
 list_directory(workflow_inputs)
 
 # Deserialize the named input to a FlyteDirectory
-named_input = "csv_files_dir"
-input_path = f"{workflow_inputs}/{named_input}"
-with open(input_path, "rb") as file:
-    flyte_dir = pickle.load(file)
-
-# Debug: list contents of data directory
-data_path = flyte_dir.path
-list_directory(data_path)
+named_input = "csv_files"
+csv_files_path = f"{workflow_inputs}/{named_input}"
+list_directory(csv_files_path)
 
 # Read CSV files
-df_a = pd.read_csv(f"{data_path}/a.csv")
-df_b = pd.read_csv(f"{data_path}/b.csv")
-df_c = pd.read_csv(f"{data_path}/c.csv")
+df_a = pd.read_csv(f"{csv_files_path}/a.csv")
+df_b = pd.read_csv(f"{csv_files_path}/b.csv")
+df_c = pd.read_csv(f"{csv_files_path}/c.csv")
 
 # Sum the values in each row across each column in the CSV files
 df_sum = pd.DataFrame()
