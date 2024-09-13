@@ -19,5 +19,5 @@ def workflow() -> FlyteDirectory:
         use_latest=True,
     )()
 
-    print(f"FlyteDirectory: {task['output_path']}")
+    # print(f"FlyteDirectory: {task['output_path']}")
     return FlyteDirectory("/workflow/outputs/files")
