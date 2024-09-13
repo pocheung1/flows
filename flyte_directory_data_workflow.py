@@ -41,7 +41,7 @@ def workflow(data_path: str) -> CSVFile:
     data_prep_results = data_prep_task(data_path=data_path)
 
     data_process_task = DominoJobTask(
-        name="Train model",
+        name="Process data",
         domino_job_config=DominoJobConfig(
             Command="python flyte_directory_data_process.py",
         ),

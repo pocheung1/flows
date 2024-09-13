@@ -26,6 +26,7 @@ df[['c']].to_csv(os.path.join(csv_files_dir, 'c.csv'), index=False, header=True)
 named_output = "csv_files_dir"
 output_path = f"/workflow/outputs/{named_output}"
 with open(output_path, "wb") as file:
-    flyte_directory = FlyteDirectory(csv_files_dir)
+    flyte_directory = FlyteDirectory.new_remote()
+    flyte_directory.new_dir(csv_files_dir)
     pickle.dump(flyte_directory, file)
     print(f"Serialized FlyteDirectory to {output_path}")
