@@ -1,8 +1,19 @@
 import os
 import pickle
+import subprocess
 
 import pandas as pd
 from flytekit.types.directory import FlyteDirectory
+
+
+def list_directory(directory):
+    try:
+        result = subprocess.run(['ls', '-l', directory], capture_output=True, text=True, check=True)
+        print(f"$ ls -l {directory}")
+        print(result.stdout)
+    except subprocess.CalledProcessError as e:
+        print(f"Error occurred: {e}")
+
 
 # Read the data directory path from the named input
 named_input = "data_path"
@@ -25,8 +36,17 @@ df[['c']].to_csv(os.path.join(csv_files_dir, 'c.csv'), index=False, header=True)
 # Create a FlyteDirectory for the CSV files directory and serialize it as a named output
 named_output = "csv_files_dir"
 output_path = f"/workflow/outputs/{named_output}"
+
+flyte_directory = FlyteDirectory.new_remote().new_dir("csv_files")
+flyte_file_a = flyte_directory.new_file("a.csv")
+df[['a']].to_csv(flyte_file_a, index=False, header=True)
+flyte_file_b = flyte_directory.new_file("b.csv")
+df[['b']].to_csv(flyte_file_b, index=False, header=True)
+flyte_file_c = flyte_directory.new_file("c.csv")
+df[['c']].to_csv(flyte_file_c, index=False, header=True)
+print(f"Flyte directory: {flyte_directory}")
+list_directory(flyte_directory.path)
+
 with open(output_path, "wb") as file:
-    flyte_directory = FlyteDirectory.new_remote()
-    flyte_directory.new_dir(csv_files_dir)
     pickle.dump(flyte_directory, file)
     print(f"Serialized FlyteDirectory to {output_path}")
