@@ -18,7 +18,7 @@ workflow_inputs = "/workflow/inputs"
 list_directory(workflow_inputs)
 
 # Deserialize the named input to a FlyteDirectory
-named_input = "data_dir"
+named_input = "csv_files_dir"
 input_path = f"{workflow_inputs}/{named_input}"
 with open(input_path, "rb") as file:
     flyte_dir = pickle.load(file)

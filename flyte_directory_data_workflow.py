@@ -23,7 +23,7 @@ def workflow(data_path: str) -> CSVFile:
 
     To run this workflow, execute the following line in the terminal:
 
-    pyflyte run --remote flyte_directory_train_workflow.py workflow --data_path /mnt/code/data/data.csv
+    pyflyte run --remote flyte_directory_data_workflow.py workflow --data_path /mnt/code/data/data.csv
 
     :param data_path: Path of the CSV data file
     :return: CSV file containing the sums
@@ -35,7 +35,7 @@ def workflow(data_path: str) -> CSVFile:
             Command="python flyte_directory_data_prep.py",
         ),
         inputs={'data_path': str},
-        outputs={'data_dir': FlyteDirectory},
+        outputs={'csv_files_dir': FlyteDirectory},
         use_latest=True,
     )
     data_prep_results = data_prep_task(data_path=data_path)
@@ -43,10 +43,10 @@ def workflow(data_path: str) -> CSVFile:
     data_process_task = DominoJobTask(
         name="Train model",
         domino_job_config=DominoJobConfig(
-            Command="python flyte_directory_data_sum.py",
+            Command="python flyte_directory_data_process.py",
         ),
         inputs={
-            'data_dir': FlyteDirectory,
+            'csv_files_dir': FlyteDirectory,
             'epochs': int,
             'batch_size': int,
         },
