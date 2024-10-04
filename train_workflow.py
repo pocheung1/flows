@@ -1,11 +1,10 @@
 from flytekit import workflow
 from flytekit.types.file import FlyteFile
 from flytekitplugins.domino.task import DominoJobConfig, DominoJobTask
-from typing import TypeVar
 
 
 @workflow
-def workflow(data_path: str) -> FlyteFile:
+def workflow(data_path: str) -> FlyteFile["csv"]:
     """
     Sample data preparation and training workflow
 
@@ -26,7 +25,7 @@ def workflow(data_path: str) -> FlyteFile:
             Command="python train_data_prep.py",
         ),
         inputs={'data_path': str},
-        outputs={'processed_data': FlyteFile[TypeVar("csv")]},
+        outputs={'processed_data': FlyteFile["csv"]},
         use_latest=True,
     )
     prepare_data_results = prepare_data(data_path=data_path)
@@ -37,12 +36,12 @@ def workflow(data_path: str) -> FlyteFile:
             Command="python train_model.py",
         ),
         inputs={
-            'processed_data': FlyteFile[TypeVar("csv")],
+            'processed_data': FlyteFile["csv"],
             'epochs': int,
             'batch_size': int,
         },
         outputs={
-            'model': FlyteFile[TypeVar("csv")],
+            'model': FlyteFile["csv"],
         },
         use_latest=True,
     )
